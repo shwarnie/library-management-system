@@ -2,6 +2,13 @@
 
 A database project built with Prisma and PostgreSQL to manage library users, books, and genres.
 
+## Project Layout
+
+- `api/` contains the Prisma schema, migrations, seed script, and Prisma service.
+- `library-api/` contains the NestJS application.
+
+Both directories are part of this repository; `library-api/` is not a separate Git submodule.
+
 ## Technologies Used
 
 - Node.js
