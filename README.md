@@ -38,6 +38,8 @@ The relationship is implemented using Prisma's `@relation` attribute:
 - `Book.genre` defines the relationship with the `Genre` model.
 - `Genre.books` allows a genre to be associated with multiple books.
 
+Modeling these relationships in Prisma felt different from a document database: instead of embedding genre data in every book document, I define related models and connect them with a foreign key. This avoids duplicated genre details and lets the database enforce referential integrity.
+
 ## Database Setup
 
 1. Install dependencies:
@@ -48,10 +50,10 @@ The relationship is implemented using Prisma's `@relation` attribute:
 
 2. Configure your PostgreSQL connection using the `DATABASE_URL` environment variable.
 
-3. Run the database migration:
+3. Apply the committed migrations to the configured PostgreSQL database:
 
    ```bash
-   npx prisma migrate dev --schema=api/prisma/schema.prisma --name init
+   npx prisma migrate deploy --schema=api/prisma/schema.prisma
    ```
 
 4. Seed the database:
