@@ -1,8 +1,35 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Role } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
 async function main() {
+  const librarianName = process.env.LIBRARIAN_NAME?.trim();
+  const librarianEmail = process.env.LIBRARIAN_EMAIL?.trim().toLowerCase();
+  const librarianPassword = process.env.LIBRARIAN_PASSWORD;
+
+  if (!librarianName || !librarianEmail || !librarianPassword) {
+    throw new Error(
+      'Set LIBRARIAN_NAME, LIBRARIAN_EMAIL, and LIBRARIAN_PASSWORD before seeding.',
+    );
+  }
+
+  if (librarianPassword.length < 16) {
+    throw new Error('LIBRARIAN_PASSWORD must be at least 16 characters long.');
+  }
+
+  const password = await bcrypt.hash(librarianPassword, 12);
+  await prisma.user.upsert({
+    where: { email: librarianEmail },
+    update: { name: librarianName, password, role: Role.LIBRARIAN },
+    create: {
+      name: librarianName,
+      email: librarianEmail,
+      password,
+      role: Role.LIBRARIAN,
+    },
+  });
+
   // 1. Create four genres
   const genres = [
     { name: 'Fiction', slug: 'fiction' },
@@ -66,6 +93,7 @@ async function main() {
   }
 
   console.log('Database seeded successfully!');
+  console.log(`Librarian account seeded: ${librarianEmail}`);
   console.log(`Genres created: ${savedGenres.length}`);
   console.log(`Books processed: ${books.length}`);
 }

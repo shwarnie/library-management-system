@@ -1,0 +1,182 @@
+{
+  "info": {
+    "_postman_id": "bc3466ca-0ff9-4bb1-bc21-6dcf8f18ee86",
+    "name": "Library Management API",
+    "description": "Catalog CRUD, search and pagination, authentication, and user profile endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Genres",
+      "item": [
+        {
+          "name": "List genres",
+          "request": { "method": "GET", "url": "{{baseUrl}}/genres" }
+        },
+        {
+          "name": "Get genre",
+          "request": { "method": "GET", "url": "{{baseUrl}}/genres/1" }
+        },
+        {
+          "name": "Create genre",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Mystery\",\n  \"slug\": \"mystery\"\n}"
+            },
+            "url": "{{baseUrl}}/genres"
+          }
+        },
+        {
+          "name": "Replace genre (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Mystery & Crime\",\n  \"slug\": \"mystery-crime\"\n}"
+            },
+            "url": "{{baseUrl}}/genres/1"
+          }
+        },
+        {
+          "name": "Update genre (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Mystery\"\n}"
+            },
+            "url": "{{baseUrl}}/genres/1"
+          }
+        },
+        {
+          "name": "Delete genre",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/genres/1" }
+        }
+      ]
+    },
+    {
+      "name": "Books",
+      "item": [
+        {
+          "name": "List books (filter/search/page)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/books?genreId=1&search=clean&page=1&limit=10"
+          }
+        },
+        {
+          "name": "Get book",
+          "request": { "method": "GET", "url": "{{baseUrl}}/books/1" }
+        },
+        {
+          "name": "Create book (Librarian)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Example Book\",\n  \"author\": \"Example Author\",\n  \"isbn\": \"9781234567890\",\n  \"totalCopies\": 3,\n  \"genreId\": 1\n}"
+            },
+            "url": "{{baseUrl}}/books"
+          }
+        },
+        {
+          "name": "Replace book (PUT, Librarian)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Example Book\"\n}"
+            },
+            "url": "{{baseUrl}}/books/1"
+          }
+        },
+        {
+          "name": "Update book (PATCH, Librarian)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Example Book\"\n}"
+            },
+            "url": "{{baseUrl}}/books/1"
+          }
+        },
+        {
+          "name": "Delete book (Librarian)",
+          "request": {
+            "method": "DELETE",
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
+            "url": "{{baseUrl}}/books/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Authentication and profile",
+      "item": [
+        {
+          "name": "Register Patron",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Example Patron\",\n  \"email\": \"patron@example.com\",\n  \"password\": \"change-me-123\"\n}"
+            },
+            "url": "{{baseUrl}}/auth/register"
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"patron@example.com\",\n  \"password\": \"change-me-123\"\n}"
+            },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Get authenticated profile",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
+            "url": "{{baseUrl}}/users/profile"
+          }
+        }
+      ]
+    }
+  ]
+}

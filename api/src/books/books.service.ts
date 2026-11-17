@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateBookDto } from './dto/create-book.dto.js';
 import { UpdateBookDto } from './dto/update-book.dto.js';
@@ -7,8 +12,40 @@ import { UpdateBookDto } from './dto/update-book.dto.js';
 export class BooksService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll() {
+  async findAll({
+    genreId,
+    search,
+    page = 1,
+    limit = 10,
+  }: {
+    genreId?: number;
+    search?: string;
+    page?: number;
+    limit?: number;
+  } = {}) {
+    if (!Number.isInteger(page) || page < 1) {
+      throw new BadRequestException('page must be a positive integer');
+    }
+
+    if (!Number.isInteger(limit) || limit < 1 || limit > 100) {
+      throw new BadRequestException('limit must be between 1 and 100');
+    }
+
+    const where: Prisma.BookWhereInput = {};
+    if (genreId !== undefined) {
+      where.genreId = genreId;
+    }
+    if (search?.trim()) {
+      where.OR = [
+        { title: { contains: search.trim(), mode: 'insensitive' } },
+        { author: { contains: search.trim(), mode: 'insensitive' } },
+      ];
+    }
+
     return this.prisma.book.findMany({
+      where,
+      skip: (page - 1) * limit,
+      take: limit,
       include: { genre: true },
     });
   }

@@ -1,47 +1,31 @@
 import {
-  Controller,
-  Get,
-  Post,
-  Put,
-  Delete,
-  Body,
-  Param,
-  ParseIntPipe,
-} from '@nestjs/common';
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Length,
+  Min,
+} from 'class-validator';
 
-import { BooksService } from './books.service.js';
-import { CreateBookDto } from './dto/create-book.dto.js';
-import { UpdateBookDto } from './dto/update-book.dto.js';
+export class CreateBookDto {
+  @IsString()
+  @IsNotEmpty()
+  title!: string;
 
-@Controller('books')
-export class BooksController {
-  constructor(private readonly booksService: BooksService) {}
+  @IsString()
+  @IsNotEmpty()
+  author!: string;
 
-  @Get()
-  findAll() {
-    return this.booksService.findAll();
-  }
+  @IsString()
+  @Length(10, 17)
+  isbn!: string;
 
-  @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.booksService.findOne(id);
-  }
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  totalCopies?: number;
 
-  @Post()
-  create(@Body() data: CreateBookDto) {
-    return this.booksService.create(data);
-  }
-
-  @Put(':id')
-  update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() data: UpdateBookDto,
-  ) {
-    return this.booksService.update(id, data);
-  }
-
-  @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.booksService.remove(id);
-  }
+  @IsInt()
+  @Min(1)
+  genreId!: number;
 }
