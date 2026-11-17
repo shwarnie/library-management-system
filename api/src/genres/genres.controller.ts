@@ -8,11 +8,16 @@ import {
   Body,
   Param,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
+import { Role } from '@prisma/client';
 
 import { GenresService } from './genres.service.js';
 import { CreateGenreDto } from './dto/create-genre.dto.js';
 import { UpdateGenreDto } from './dto/update-genre.dto.js';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
+import { RolesGuard } from '../auth/roles.guard.js';
+import { Roles } from '../auth/roles.decorator.js';
 
 @Controller('genres')
 export class GenresController {
@@ -29,12 +34,16 @@ export class GenresController {
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.LIBRARIAN)
   create(@Body() data: CreateGenreDto) {
     return this.genresService.create(data);
   }
 
   @Put(':id')
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.LIBRARIAN)
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() data: UpdateGenreDto,
@@ -43,6 +52,8 @@ export class GenresController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.LIBRARIAN)
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.genresService.remove(id);
   }

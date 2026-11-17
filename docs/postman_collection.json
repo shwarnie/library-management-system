@@ -26,6 +26,10 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"Mystery\",\n  \"slug\": \"mystery\"\n}"
@@ -38,6 +42,10 @@
           "request": {
             "method": "PUT",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"Mystery & Crime\",\n  \"slug\": \"mystery-crime\"\n}"
@@ -50,6 +58,10 @@
           "request": {
             "method": "PATCH",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"Mystery\"\n}"
@@ -59,7 +71,14 @@
         },
         {
           "name": "Delete genre",
-          "request": { "method": "DELETE", "url": "{{baseUrl}}/genres/1" }
+          "request": {
+            "method": "DELETE",
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
+            "url": "{{baseUrl}}/genres/1"
+          }
         }
       ]
     },

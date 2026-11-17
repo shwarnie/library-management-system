@@ -93,9 +93,10 @@ Send the token as `Authorization: Bearer <token>` to access
 require a token for a `LIBRARIAN` account. New accounts are Patrons by default;
 grant the Librarian role through a trusted administrative database process.
 
-The catalog routes are `GET /genres`, `GET /genres/:id`, `POST /genres`,
-`PATCH`/`PUT /genres/:id`, and `DELETE /genres/:id`; books support corresponding
-list, detail, create, update, and delete routes. `GET /books` accepts
+The public genre routes are `GET /genres` and `GET /genres/:id`. Creating,
+updating (`PATCH`/`PUT`), or deleting a genre requires a Librarian token. Books
+support corresponding list, detail, create, update, and delete routes.
+`GET /books` accepts
 `genreId`, `search` (matches title or author), `page`, and `limit` query
 parameters. Pagination defaults to page 1 and 10 results, with a maximum
 limit of 100.
